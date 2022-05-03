@@ -28,10 +28,10 @@ class Hole(commands.Cog):
                 return
 
             try:
-                r = random.randint(0, 5)
+                r = random.randint(0, 60)
                 until = discord.utils.utcnow() + timedelta(seconds=r)
 
-                await m.author.timeout(until, reason="Another victim of the Robot Mafia")
+                await om.author.timeout(until, reason="Another victim of the Robot Mafia")
             except discord.Forbidden:
                 await m.reply("Sorry boss, da feds got in da way")
             else:
