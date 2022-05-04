@@ -7,6 +7,7 @@ from discord.ext import commands
 log = logging.getLogger(__name__)
 initial_sigils = (
     "sigils.hole",
+    "sigils.quote",
 )
 
 
