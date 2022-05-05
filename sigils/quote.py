@@ -12,6 +12,8 @@ log = logging.getLogger(__name__)
 
 
 class Quote(commands.Cog):
+    """Functionality related to quotes."""
+
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -21,7 +23,7 @@ class Quote(commands.Cog):
             return
 
         if payload.emoji.name == "\N{SPEECH BALLOON}":
-            exists = await Q(message_id=str(payload.message_id)).exists()
+            exists = await Q().exists(message_id=str(payload.message_id))
             if exists:
                 return
 
@@ -29,7 +31,7 @@ class Quote(commands.Cog):
             member = payload.member
             if payload.member is None:
                 member = g.get_member(payload.user_id)
-
+            
             if member is None:
                 return
 
@@ -66,6 +68,28 @@ class Quote(commands.Cog):
                 log.error(f"error inserting quote: {e}")
             else:
                 await ch.send(f"New quote added by {member.name}. This is quote #{num}. {msg.jump_url}")
+
+    @commands.group(aliases=["q"])
+    async def quote(self, ctx: commands.Context):
+        """Group for interacting with quotes."""
+        return
+
+    @quote.command(aliases=["delete"])
+    async def remove(self, ctx: commands.Context, quote: int):
+        """Remove a quote."""
+        q = await Q.get_or_none(guild_id=str(ctx.guild.id), num=quote)
+        if q is None:
+            return await ctx.reply("Quote doesn't exist, nerd")
+
+        try:
+            await q.delete()
+        except OperationalError as e:
+            log.error(f"error removing quote: {e}")
+            return await ctx.reply(
+                "Sorry, something to do with the database broke, and I wasn't able to remove the quote."
+            )
+        else:
+            return await ctx.reply("Quote removed.")
 
 
 async def setup(bot):
