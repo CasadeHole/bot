@@ -8,6 +8,7 @@ log = logging.getLogger(__name__)
 initial_sigils = (
     "sigils.hole",
     "sigils.quote",
+    "sigils.admin"
 )
 
 
