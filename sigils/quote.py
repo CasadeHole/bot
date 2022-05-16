@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 import logging
 
 from tortoise.functions import Max
@@ -8,6 +9,9 @@ from discord.ext import commands
 
 from .utils.db import Quote as Q
 
+if TYPE_CHECKING:
+    from bot import DONG
+
 
 log = logging.getLogger(__name__)
 
@@ -15,8 +19,8 @@ log = logging.getLogger(__name__)
 class Quote(commands.Cog):
     """Functionality related to quotes."""
 
-    def __init__(self, bot: commands.Bot):
-        self.bot = bot
+    def __init__(self, bot: DONG):
+        self.bot: DONG = bot
 
     def make_embed(self, q: Q, m: discord.Member) -> discord.Embed:
         e = discord.Embed(
@@ -184,5 +188,5 @@ class Quote(commands.Cog):
         return await ctx.reply(f"There are currently {count} quotes")
 
 
-async def setup(bot):
+async def setup(bot: DONG):
     await bot.add_cog(Quote(bot))

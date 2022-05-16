@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 import random
 from datetime import timedelta
 import re
@@ -6,11 +9,15 @@ from discord.ext import commands
 import discord
 
 TIMEOUT_RE = re.compile(r"(computer|boys), \w+ this \w+")
+FORTNITE_ROLE = 841086580147093525
+
+if TYPE_CHECKING:
+    from bot import DONG
 
 
 class Hole(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot: DONG):
+        self.bot: DONG = bot
 
     @commands.Cog.listener()
     async def on_message(self, m: discord.Message):
@@ -37,6 +44,14 @@ class Hole(commands.Cog):
             else:
                 await m.reply("Da jobs dones, boss")
 
+        for rm in m.role_mentions:
+            if rm.id == FORTNITE_ROLE:
+                fortnite_gifs = ("fortnite-1", "fortnite-2", "fortnite-3", "fortnite-4", "fortnite-5")
 
-async def setup(bot):
+                gif = random.choice(fortnite_gifs)
+                gif_url = self.bot.asset(gif, "gif")
+                await m.channel.send(gif_url)
+
+
+async def setup(bot: DONG):
     await bot.add_cog(Hole(bot))

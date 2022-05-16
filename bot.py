@@ -4,11 +4,13 @@ import discord
 from discord.ext import commands
 
 
+HOLEDAEMON_BASE = "https://holedaemon.net/images"
+
 log = logging.getLogger(__name__)
 initial_sigils = (
+    "sigils.admin",
     "sigils.hole",
-    "sigils.quote",
-    "sigils.admin"
+    # "sigils.quote",
 )
 
 
@@ -18,6 +20,9 @@ class DONG(commands.Bot):
             command_prefix=commands.when_mentioned_or("!"),
             intents=discord.Intents().all(),
         )
+
+    def asset(self, title: str, ext: str = None) -> str:
+        return f"{HOLEDAEMON_BASE}/{title}.{ext if ext is not None else '.jpg'}"
 
     async def setup_hook(self):
         try:
